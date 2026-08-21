@@ -1,0 +1,9 @@
+# name|url|expect_substring   (blank expect = any 200 body)
+AI Companion (Railway)|https://ai-companion-backend-production-efd6.up.railway.app/health|"status":"ok"
+AI Companion (aicompaniondev.com)|https://www.aicompaniondev.com/health|"status":"ok"
+MindBridge|https://mindbridge-app-production.up.railway.app/health|"status":"ok"
+Inner Thread backend|https://sweet-gratitude-production-8212.up.railway.app/health|"ok":true
+Inner Thread site|https://www.innerthread.net/|
+Human Invaders site|https://humaninvaders.net/|
+ReelPrompt site|https://reelpromptvideo.com/|
+SlapTunee backend|https://slaptunee-backend-production.up.railway.app/health|"status":"ok"
