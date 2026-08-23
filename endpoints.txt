@@ -1,9 +1,11 @@
 # name|url|expect_substring   (blank expect = any 200 body)
+#
+# Portfolio reduced 2026-08-22: keeping AI Companion + Human Invaders only.
+# SlapTunee, ReelPrompt, Inner Thread and MindBridge backends were removed —
+# they are being shut down, so failures there are expected, not incidents.
 AI Companion (Railway)|https://ai-companion-backend-production-efd6.up.railway.app/health|"status":"ok"
 AI Companion (aicompaniondev.com)|https://www.aicompaniondev.com/health|"status":"ok"
-MindBridge|https://mindbridge-app-production.up.railway.app/health|"status":"ok"
-Inner Thread backend|https://sweet-gratitude-production-8212.up.railway.app/health|"ok":true
-Inner Thread site|https://www.innerthread.net/|
 Human Invaders site|https://humaninvaders.net/|
-ReelPrompt site|https://reelpromptvideo.com/|
-SlapTunee backend|https://slaptunee-backend-production.up.railway.app/health|"status":"ok"
+# Keep ONLY until Inner Thread is unpublished on Google Play — this domain serves
+# Play's mandatory account-deletion page. Drop it once the app is delisted.
+Inner Thread site|https://www.innerthread.net/|
