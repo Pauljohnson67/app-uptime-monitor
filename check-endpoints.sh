@@ -2,8 +2,14 @@
 # Liveness check for Paul's production endpoints.
 # Exit 0 = all up, 1 = at least one down. Writes a markdown report to report.md.
 set -uo pipefail
+cd "$(dirname "$0")" || exit 1          # always resolve endpoints.txt next to the script
 REPORT="${REPORT_FILE:-report.md}"
-FAIL=0; DOWN_LIST=""
+ENDPOINTS="endpoints.txt"
+if [ ! -r "$ENDPOINTS" ]; then
+  echo "FATAL: cannot read $ENDPOINTS — refusing to report green having checked nothing." >&2
+  exit 1
+fi
+FAIL=0; DOWN_LIST=""; CHECKED=0
 : > "$REPORT"
 printf '| Service | Status | Detail |\n|---|---|---|\n' >> "$REPORT"
 
@@ -29,6 +35,7 @@ while IFS='|' read -r name url expect; do
     [ "$attempt" -lt 3 ] && sleep 10
   done
 
+  CHECKED=$((CHECKED+1))
   if [ "$ok" = "1" ]; then
     printf '| %s | ✅ up | `%s` |\n' "$name" "$detail" >> "$REPORT"
   else
@@ -36,9 +43,15 @@ while IFS='|' read -r name url expect; do
     DOWN_LIST="${DOWN_LIST}- **${name}** — ${detail}\n  ${url}\n"
     FAIL=1
   fi
-done < endpoints.txt
+done < "$ENDPOINTS"
 
 rm -f body.tmp err.tmp
-{ echo; if [ "$FAIL" -eq 0 ]; then echo "All endpoints healthy."; else echo "### Down"; printf "%b" "$DOWN_LIST"; fi; } >> "$REPORT"
+
+# A monitor that checks nothing must never report green.
+if [ "$CHECKED" -eq 0 ]; then
+  echo "FATAL: parsed 0 endpoints from $ENDPOINTS — refusing to report green." | tee -a "$REPORT" >&2
+  exit 1
+fi
+{ echo; if [ "$FAIL" -eq 0 ]; then echo "All $CHECKED endpoints healthy."; else echo "### Down"; printf "%b" "$DOWN_LIST"; fi; } >> "$REPORT"
 cat "$REPORT"
 exit $FAIL
