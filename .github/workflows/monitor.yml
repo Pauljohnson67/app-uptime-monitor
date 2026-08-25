@@ -1,0 +1,5 @@
+name: uptime
+on: {schedule: [{cron: '*/5 * * * *'}], workflow_dispatch: {}}
+permissions: {contents: read}
+concurrency: {group: uptime, cancel-in-progress: false}
+jobs: {check: {runs-on: ubuntu-latest, steps: [{uses: 'actions/checkout@v4'}, {name: 'Check endpoints', run: 'bash ./check-endpoints.sh'}]}}
