@@ -4,6 +4,9 @@ External uptime monitoring for Paul's production apps. Runs on GitHub's
 servers every 5 minutes, so it keeps watch whether or not any local machine
 is on — that was the gap this fixes.
 
+Verified running 2026-08-25: workflow `uptime` is active and a dispatched run
+completed successfully.
+
 ## What it checks
 
 All 8 production endpoints (see `endpoints.txt`). An endpoint is healthy only
@@ -13,9 +16,15 @@ transient blip doesn't page anyone.
 
 ## Alerts
 
-A failed run opens a GitHub issue labelled `uptime-alert` (GitHub emails you),
-and keeps commenting on that same issue rather than opening a new one every
-5 minutes. When everything recovers, the issue is auto-closed.
+If any endpoint fails its check, `check-endpoints.sh` exits non-zero and the
+workflow run **fails**. GitHub emails the repository owner on a failed run —
+that is the alert. Open the run to see the report table showing which endpoint
+was down and why.
+
+The workflow lives in `.github/workflows/monitor.yml` and is written in YAML
+**flow style** (every line at column zero) on purpose: it was authored through
+GitHub's web editor, which auto-indents typed lines and silently corrupts
+normal block-style YAML. Keep that format if you edit it there.
 
 ## Adding or changing an endpoint
 
